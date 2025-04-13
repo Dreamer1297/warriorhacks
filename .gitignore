@@ -8,4 +8,4 @@ env
 # python cache, macos system
 __pycache__/
 *.pyc
-.DS_Storeenv/
+.DS_Store
