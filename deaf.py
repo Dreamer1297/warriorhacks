@@ -18,15 +18,13 @@ sd.wait()
 print("done")
 write("recorded.wav", 44100, audio)
 
-upload_url = transcriber.upload("recorded.wav")
-
 transcript = transcriber.transcribe(
-    upload_url,
-    auto_chapters=True,
-    speaker_labels=True,
-    sentiment_analysis=True,
-    entity_detection=True,
-    iab_categories=True
+    "./recorded.wav",
+    #auto_chapters=True,
+    #speaker_labels=True,
+    #sentiment_analysis=True,
+    #entity_detection=True,
+    #iab_categories=True
 )
 
 print("text:", transcript.text)
