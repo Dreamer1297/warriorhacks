@@ -1,6 +1,6 @@
 # virtual environments
 env
-.venv/
+.venv
 
 # detection model
 *.pt
