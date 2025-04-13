@@ -1,4 +1,5 @@
 .env
+*.mp3
 
 # virtual environments
 .venv
