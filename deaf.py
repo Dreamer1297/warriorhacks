@@ -11,6 +11,18 @@ aai.settings.api_key = os.getenv("ASSEMBLY_API_KEY")
 
 transcriber = aai.Transcriber()
 
+config = aai.TranscriptionConfig(
+    auto_chapters=True,
+    speaker_labels=True,
+    sentiment_analysis=True,
+    entity_detection=True,
+    iab_categories=True,
+    language_detection=True,
+    language_confidence_threshold=0.4,
+    
+
+)
+
 duration = 5
 print("recording")
 audio = sd.rec(duration*44100, samplerate=44100, channels=1)
@@ -20,11 +32,7 @@ write("recorded.wav", 44100, audio)
 
 transcript = transcriber.transcribe(
     "./recorded.wav",
-    #auto_chapters=True,
-    #speaker_labels=True,
-    #sentiment_analysis=True,
-    #entity_detection=True,
-    #iab_categories=True
+    config
 )
 
 print("text:", transcript.text)
