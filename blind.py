@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 model = YOLO("yolov8n.pt")
-client = OpenAI(api_key=os.getenv("API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FPS, 1)
