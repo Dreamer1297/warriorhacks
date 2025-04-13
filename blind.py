@@ -53,6 +53,9 @@ while capture.isOpened():
                 given: car, bus, person, person, person, bbox data, img, objects --> you should output: A red car is behind a large bus, and three people are walking around. One person has a red hat.
                 Return only your sentences in that format. Also please, when talking about the location, DO NOT DESCRIBE THE LOCATION. ONLY SAY THE LOCATION. BE ONLY DESCRIPTIVE ABOUT THE SUBJECTS.
              
+                YOUR TONE: DO NOT DESCRIBE IT LIKE IT IS AN IMAGE. DESCRIBE IT LIKE IT IS THE VIEW OF A PERSON, 
+
+
                 Take into account the size of the bounding boxes, like a smaller bbox might mean an object is farther away or just smaller. Use all these resources (like the image itself) to accurately describe the image.
                 The data is an array with the value of model(img)[0].boxes. Here is the data: {results[0].boxes}
                 This is a list of all the objects in the image: {things}
