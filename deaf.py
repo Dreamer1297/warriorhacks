@@ -4,6 +4,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 import assemblyai as aai
+import subprocess
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -19,8 +20,6 @@ config = aai.TranscriptionConfig(
     iab_categories=True,
     language_detection=True,
     language_confidence_threshold=0.4,
-    
-
 )
 
 duration = 5
@@ -34,24 +33,35 @@ transcript = transcriber.transcribe(
     "./recorded.wav",
     config
 )
+print(transcript.text)
 
-print("text:", transcript.text)
+cmd = [
+    "python3",
+    "pyAudioAnalysis/audioAnalysis.py",
+    "classifyFile",
+    "-i", "./recorded.wav",
+    "-m", "svm_rbf_sm"
+]
+result = subprocess.run(cmd, capture_output=True, text=True)
+description = result.stdout
+print(description)
 
 orders = [
             {"role": "system", "content": f'''
                 You are an AI model that generates a descriptions from transcribed text.
-                Identify emotion, .
-                Only output descriptions, nothing else. BE AS DESCRIPTIVE AS POSSIBLE USING ALL YOUR RESOURCES. BE EXTREMELEY RESOURCEFUL AND DESCRIPTIVE USING THE ORIGINAL IMAGE, THE BOUNDING BOX DATA OF THE OBJECTS IN THAT IMAGE, AND THE OBJECTS IN THAT IMAGE.
+                Only output descriptions, nothing else. BE AS DESCRIPTIVE AS POSSIBLE USING ALL YOUR RESOURCES. BE EXTREMELEY RESOURCEFUL AND DESCRIPTIVE USING a classification of the speaker and transcribed text.
 
-                given: audio of slight jazz music and people talking --> you should output: There is jazz music playing, and people are chatting.
-                given: audio of many cars honking --> you should output: Many cars are honking.
-                given: audio of a person saying 'Hello! How are you doing?' --> you should output: A person is saying 'Hello! How are you doing?'
+                given: Person saying 'How are you?' and classification = male, happy --> you should output: A person, probably male, is saying 'How are you?'
+                given: Person saying 'Why did you cheat on me?' and classification = female, angry --> you should output: An angry female is saying "Why did you cheat on me?"
              
-                Return only your sentences in that format. Also please, when talking about the location, DO NOT DESCRIBE THE LOCATION. ONLY SAY THE LOCATION. BE ONLY DESCRIPTIVE ABOUT THE SUBJECTS.
+                Return only your sentences in that format. YOUR TONE: DO NOT DESCRIBE IT LIKE IT IS text. DESCRIBE IT LIKE IT IS THE HEARING OF A PERSON, 
              
-                YOUR TONE: DO NOT DESCRIBE IT LIKE IT IS text. DESCRIBE IT LIKE IT IS THE HEARING OF A PERSON, 
+                Combine the two resources into something that conveys the most information.
              
-                Here is the audio file: {transcript.text}'''},
+                Identify and predict emotion, etc.
+
+                Here is the text: {transcript.text}
+                Here is the classification of the speaker: {description}'''},
 
             {"role":"user", "content": f"Summarize what is happening. Your response should not take more than five seconds to say out loud."}
         ]
